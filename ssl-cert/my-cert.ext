@@ -1,5 +1,5 @@
 [var]
-net = 192.168.0
+net = 172.17.0
 
 [default]
 subjectAltName = \

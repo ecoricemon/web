@@ -32,3 +32,10 @@ openssl x509 -req -days 36500 -in $CSR_PATH -signkey $KEY_PATH -passin pass:$PW 
 # Clean
 rm -f $CSR_PATH
 
+# Copy crt and key to server and client directories
+cp $CRT_PATH ../server/
+cp $KEY_PATH ../server/
+cp $CRT_PATH ../client/
+
+echo 'Done'
+
