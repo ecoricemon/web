@@ -1,0 +1,9 @@
+[var]
+net = 192.168.0
+
+[default]
+subjectAltName = \
+	IP:$var::net.1, \
+	IP:$var::net.2, \
+	IP:$var::net.3
+
