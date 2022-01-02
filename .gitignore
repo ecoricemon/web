@@ -1,2 +1,5 @@
 # Ignore output certificate files
 ssl-cert/out/
+server/cert*
+client/cert*
+

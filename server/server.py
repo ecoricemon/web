@@ -9,7 +9,7 @@ def index():
 
 def main():
 	ssl_ctx = ssl.SSLContext(ssl.PROTOCOL_TLS)
-	ssl_ctx.load_cert_chain(certfile='my-cert.crt', keyfile='my-cert.key')
+	ssl_ctx.load_cert_chain(certfile='cert-my-server.crt', keyfile='cert-my-server.key')
 	app.run(host='0.0.0.0', port=8080, ssl_context=ssl_ctx)
 
 if __name__ == '__main__':

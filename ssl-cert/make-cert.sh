@@ -1,41 +1,59 @@
 #!/bin/sh
-if [ $# -eq 0 ]
-	then
-		echo "Usage > make-cert.sh [your password]"
-		exit 0
-fi
 
-PW=$1
 OUT_DIR=out
-OUT_PREFIX=my-cert
-KEY_PATH=$OUT_DIR/$OUT_PREFIX.key
-CSR_PATH=$OUT_DIR/$OUT_PREFIX.csr
-CRT_PATH=$OUT_DIR/$OUT_PREFIX.crt
-
-# Clean
-rm -f $KEY_PATH
-rm -f $CSR_PATH
-rm -f $CRT_PATH
+CN_SERVER=my-server
+CN_CLIENT=my-client
 
 # Generate output directory
 mkdir -p $OUT_DIR
 
-# Generate private key
-openssl genrsa -aes256 -passout pass:$PW -out $KEY_PATH 2048
+# Function to generate key path
+get_path(){
+	local sort=$1
+	local file_name=cert-$2
 
-# Generate CSR
-openssl req -new -config my-cert.cnf -key $KEY_PATH -passin pass:$PW -out $CSR_PATH
+	if [ $sort = "key" ]
+	then
+		echo "$OUT_DIR/$file_name.key"
+	elif [ $sort = "csr" ]
+	then
+		echo "$OUT_DIR/$file_name.csr"
+	elif [ $sort = "crt" ]
+	then
+		echo "$OUT_DIR/$file_name.crt"
+	fi
+}
 
-# Generate certificate
-openssl x509 -req -days 36500 -in $CSR_PATH -signkey $KEY_PATH -passin pass:$PW -extfile my-cert.ext -out $CRT_PATH
+# Function to generate certificate
+make_cert(){
+	local cn=$1
+	local key_path=$(get_path key $cn)
+	local csr_path=$(get_path csr $cn)
+	local crt_path=$(get_path crt $cn)
 
-# Clean
-rm -f $CSR_PATH
+	# Clean
+	rm -f $key_path
+	rm -f $csr_path
+	rm -f $crt_path
+
+	# Generate private key
+	openssl genrsa -out $key_path 2048
+
+	# Generate CSR
+	openssl req -new -key $key_path -out $csr_path -subj "/C=KR/O=My organization/CN=www.$cn.com"
+
+	# Generate certificate
+	openssl x509 -req -days 36500 -in $csr_path -signkey $key_path -extfile my-cert.ext -out $crt_path
+}
+
+# Generate certificates
+make_cert $CN_SERVER
+make_cert $CN_CLIENT
 
 # Copy crt and key to server and client directories
-cp $CRT_PATH ../server/
-cp $KEY_PATH ../server/
-cp $CRT_PATH ../client/
+cp $(get_path key $CN_SERVER) ../server/
+cp $(get_path crt $CN_SERVER) ../server/
+cp $(get_path crt $CN_SERVER) ../client/
 
 echo 'Done'
 
