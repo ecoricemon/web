@@ -4,4 +4,6 @@ https/server/__pycache__/
 https/server/cert*
 https/clients/__pycache__/
 https/clients/cert*
+http/server/__pycache__/
+http/client/__pycache__/
 

@@ -1,0 +1,35 @@
+version: "3"
+services:
+  server:
+    build: ./server
+    image: web-server:0.1
+    networks:
+      my_net:
+        ipv4_address: 172.1.0.2 
+    ports: 
+      - 8080:8080
+    volumes:
+      - ./server:/workspace
+    working_dir: /workspace
+    command: gunicorn
+
+  client:
+    build: ./client
+    image: web-client:0.1
+    networks:
+      my_net:
+        ipv4_address: 172.1.0.3
+    volumes:
+      - ./client:/workspace
+    working_dir: /workspace
+    command: python client.py
+
+networks:
+  my_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.1.0.0/24
+    driver_opts:
+      com.docker.network.bridge.name: http-if
+
