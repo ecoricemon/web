@@ -1,7 +1,7 @@
 # Ignore output certificate files
-ssl-cert/out/
-server/__pycache__/
-server/cert*
-clients/__pycache__/
-clients/cert*
+https/ssl-cert/out/
+https/server/__pycache__/
+https/server/cert*
+https/clients/__pycache__/
+https/clients/cert*
 
