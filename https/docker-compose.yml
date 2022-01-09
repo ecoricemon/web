@@ -1,7 +1,7 @@
 version: "3"
 services:
   server:
-    build: ./server
+    build: ../docker/server
     image: web-server:0.1
     networks:
       my_net:
@@ -14,7 +14,7 @@ services:
     command: gunicorn
 
   client1:
-    build: ./clients
+    build: ../docker/client
     image: web-client:0.1
     networks:
       my_net:
